@@ -48,10 +48,10 @@ UART_HandleTypeDef huart2;
 typedef struct
 {
 	ADC_ChannelConfTypeDef Config;
-	uint16_t Data;
+	uint32_t Data;
 } ADCStructure;
 
-ADCStructure ADCChannel[3] ={0};
+ADCStructure ADCChannel[3] = {0};
 
 /* USER CODE END PV */
 
@@ -108,7 +108,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	ADCPollingMethodInit();
+	ADCPollingMethodUpdate();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
