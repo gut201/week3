@@ -52,6 +52,10 @@ typedef struct
 } ADCStructure;
 
 ADCStructure ADCChannel[3] = {0};
+uint8_t ADCMode = 0;
+float ADCOutputConverted = 0;
+uint32_t ButtonTimeStamp = 0;
+uint8_t SwitchState1[2] = {0};
 
 /* USER CODE END PV */
 
@@ -109,6 +113,33 @@ int main(void)
   while (1)
   {
 	ADCPollingMethodUpdate();
+	if(HAL_GetTick() - ButtonTimeStamp >= 100)
+	{
+		ButtonTimeStamp = HAL_GetTick();
+		SwitchState1[0] = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13);
+		if(SwitchState1[0] == GPIO_PIN_RESET && SwitchState1[1] == GPIO_PIN_SET)
+		{
+			if(ADCMode == 1)
+			{
+				ADCMode = 0;
+			}
+			else
+			{
+				ADCMode = 1;
+			}
+		}
+		SwitchState1[1] = SwitchState1[0];
+	}
+	if(ADCMode == 0)
+	{
+		ADCOutputConverted = (ADCChannel[0].Data*1000*3.3)/(4096.0);
+	}
+	else if(ADCMode == 1)
+	{
+		ADCOutputConverted = (((ADCChannel[2].Data/4096.0*3.3) - 0.76)/0.0025) + 25.0;
+	}
+
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
